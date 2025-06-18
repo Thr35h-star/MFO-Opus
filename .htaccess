@@ -1,0 +1,36 @@
+# Включаем движок перезаписи
+RewriteEngine On
+
+# Защита конфигурационных файлов
+<FilesMatch "^(config\.php|\.htaccess|database\.sql)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Защита папки assets от выполнения PHP
+<FilesMatch "\.(php|php3|php4|php5|phtml|pl|py|jsp|asp|sh|cgi)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Запрет просмотра директорий
+Options -Indexes
+
+# Установка кодировки по умолчанию
+AddDefaultCharset UTF-8
+
+# Защита от XSS атак
+<IfModule mod_headers.c>
+    Header set X-XSS-Protection "1; mode=block"
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+</IfModule>
+
+# Перенаправление на HTTPS (раскомментируйте при использовании SSL)
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+# Обработка ошибок
+ErrorDocument 404 /404.php
+ErrorDocument 403 /403.php
+ErrorDocument 500 /500.php
